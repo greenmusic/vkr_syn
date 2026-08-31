@@ -1,0 +1,32 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "start:prod": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "dev:bg": "start /B nodemon src/index.js",
+    "start:bg": "pm2 restart backend --watch || pm2 start src/index.js --name backend --watch",
+    "stop:bg": "pm2 stop backend || taskkill /F /IM node.exe /FI \"WINDOWTITLE eq nodemon src/index.js\" 2>nul || taskkill /F /IM nodemon.exe 2>nul || echo \"No backend process running\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.2.0",
+    "mysql2": "^3.23.3",
+    "sequelize": "^6.37.8"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

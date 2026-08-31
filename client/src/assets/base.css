@@ -1,0 +1,110 @@
+:root {
+  color-scheme: light;
+  --app-font: 'Segoe UI', Roboto, system-ui, sans-serif;
+
+  --white-change: #fff;
+  --white-banner: #fff;
+  --banner-button-bg: #fff;
+  --banner-button-text: #000;
+  --banner-bg: #4467b7;
+  --static1: #fff;
+  --static2: #1f2e43;
+  --static3: #cdd9e9;
+  --accent1: #0085ff;
+  --accent2: #2d9bff;
+  --accent3: #5bcfb0;
+  --accent4: #0085ff;
+  --accent5: #f1f7ff;
+  --main1: #7e92ae;
+  --secondary1: #b3c8db;
+  --secondary2: #ccd9e9;
+  --secondary3: #eaf2fa;
+  --secondary4: #dbefeb;
+  --reorganization-text: #515f6e;
+  --reorganization-banner: #030b3a;
+  --blue: #32c5ff;
+  --green: #13af23;
+  --investment-calc: #ffa735;
+  --yellow-accent: #ffc500;
+  --yellow2: #ffa735;
+  --red: #d11f00;
+  --border: #deeafa;
+  --bg: #f4f7fa;
+  --icon-services: #ffd9a5;
+  --diagram: #ffd9a5;
+  --icon-bg: #fff8f0;
+  --calendar-bg: #f4f7fa;
+  --logo: #131313;
+
+  --app-background: var(--bg);
+  --app-surface: var(--static1);
+  --app-text: var(--static2);
+  --app-heading: var(--static2);
+  --app-muted: var(--reorganization-text);
+  --app-border: var(--border);
+  --app-primary: var(--accent1);
+  --app-banner: var(--banner-bg);
+  --app-radius: 8px;
+  --text-page: 20px;
+  --text-title: 16px;
+  --text-section: 15px;
+  --text-body: 13px;
+  --text-muted: 12px;
+  --text-chip: 11px;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+  margin: 0;
+  background: var(--app-background);
+  color: var(--app-text);
+  font-family: var(--app-font);
+}
+
+body {
+  min-width: 320px;
+  font-size: var(--text-body);
+  line-height: 1.45;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  color: var(--app-heading);
+  font-family: inherit;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+h1 {
+  font-size: var(--text-page);
+}
+
+h2 {
+  font-size: var(--text-title);
+}
+
+h3 {
+  font-size: var(--text-section);
+}
+
+h4 {
+  font-size: var(--text-body);
+}
+
+p {
+  margin: 0;
+}
