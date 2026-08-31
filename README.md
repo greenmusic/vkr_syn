@@ -44,7 +44,7 @@ npm start
 
 ## Nginx (рекомендуется HTTPS)
 
-Проксируйте 443 на Node. Пример: `deploy/nginx.conf.example`.
+Проксируйте 443 на Node.
 
 После TLS:
 
