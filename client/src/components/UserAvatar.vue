@@ -1,6 +1,6 @@
 <template>
-  <v-avatar :size="size" :color="color" :title="username || 'Пользователь'">
-    <v-img v-if="avatarSource" :src="avatarSource" :alt="username || 'Аватар пользователя'" cover />
+  <v-avatar :size="size" :color="color" :title="username || 'Пользователь'" class="user-avatar">
+    <img v-if="avatarSource" class="user-avatar-img" :src="avatarSource" :alt="username || ''" />
     <span v-else>{{ initial }}</span>
   </v-avatar>
 </template>
@@ -18,3 +18,16 @@ const props = defineProps({
 const avatarSource = computed(() => props.avatar || null)
 const initial = computed(() => props.username?.charAt(0).toUpperCase() || '?')
 </script>
+
+<style scoped>
+.user-avatar {
+  flex-shrink: 0;
+}
+
+.user-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+</style>

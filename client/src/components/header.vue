@@ -96,7 +96,7 @@ const logout = async () => {
     console.error('[Header] Logout error:', error)
   } finally {
     clearSession()
-    window.location.assign('/login')
+    router.replace({ name: 'login' })
   }
 }
 

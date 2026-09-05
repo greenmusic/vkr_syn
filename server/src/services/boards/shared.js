@@ -83,7 +83,7 @@ export { toUser, toTaskPerson };
 
 const toMember = (user) => ({
   ...toTaskPerson(user),
-  role: user.BoardMember?.role || "editor",
+  role: user.BoardMember?.role || user.dataValues?.BoardMember?.role || "editor",
 });
 
 export const assigneeFields = (user) => ({

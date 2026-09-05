@@ -53,7 +53,29 @@ export const getBoards = async (userId) => {
 /** Полная доска по id, если к ней есть доступ. */
 export const getBoard = async (userId, boardId) => {
   const boards = await loadBoards(userId, boardId);
-  return boards[0] ? serializeBoard(boards[0], userId) : null;
+  if (!boards[0]) return null;
+  const serialized = serializeBoard(boards[0], userId);
+  const memberIds = (serialized.members || []).map((member) => member.id).filter(Boolean);
+  if (!memberIds.length) return serialized;
+
+  const profiles = await User.findAll({
+    where: { id: memberIds },
+    attributes: ["id", "username", "email", "avatarData"],
+  });
+  const byId = new Map(profiles.map((user) => [String(user.id), toTaskPerson(user)]));
+  serialized.members = serialized.members.map((member) => {
+    const profile = byId.get(String(member.id)) || {};
+    return {
+      ...profile,
+      ...member,
+      id: String(member.id),
+      username: member.username || profile.username || member.email || profile.email,
+      email: member.email || profile.email,
+      avatar: member.avatar || profile.avatar,
+      role: member.role,
+    };
+  });
+  return serialized;
 };
 
 /** Создаёт доску автору и три стартовых этапа. */
@@ -112,7 +134,9 @@ export const addMember = async (boardId, ownerId, userId, role = "editor") => {
     where: { id: boardId, userId: ownerId },
   });
   if (!board) return null;
-  const user = await User.findByPk(userId);
+  const user = await User.findByPk(userId, {
+    attributes: ["id", "username", "email", "avatarData"],
+  });
   if (!user || sameId(user.id, ownerId)) return null;
   const memberRole = role === "viewer" ? "viewer" : "editor";
   const [membership] = await BoardMember.findOrCreate({

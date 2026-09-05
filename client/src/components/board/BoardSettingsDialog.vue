@@ -77,18 +77,18 @@
             item-title="username"
             item-value="id"
             label="Пользователь"
-            placeholder="Имя или email"
+            placeholder="Начните вводить имя"
             hide-details
             :loading="searchingUsers"
             @update:model-value="$emit('update:newMemberId', $event)"
             @update:search="$emit('search-users', $event)"
           >
             <template #item="{ props: itemProps, item }">
-              <v-list-item v-bind="itemProps" :title="item.raw?.username">
+              <v-list-item v-bind="itemProps" :title="resolveMember(item).username">
                 <template #prepend>
                   <UserAvatar
-                    :avatar="userAvatarSrc(item.raw)"
-                    :username="item.raw?.username"
+                    :avatar="userAvatarSrc(resolveMember(item))"
+                    :username="resolveMember(item).username"
                     :size="30"
                   />
                 </template>
@@ -97,11 +97,11 @@
             <template #selection="{ item }">
               <div class="member-selection">
                 <UserAvatar
-                  :avatar="userAvatarSrc(item.raw)"
-                  :username="item.raw?.username"
+                  :avatar="userAvatarSrc(resolveMember(item))"
+                  :username="resolveMember(item).username"
                   :size="22"
                 />
-                <span>{{ item.raw?.username }}</span>
+                <span>{{ resolveMember(item).username }}</span>
               </div>
             </template>
           </v-autocomplete>
@@ -118,21 +118,25 @@
           <v-btn type="button" color="primary" @click="$emit('add-member')">Добавить</v-btn>
         </div>
         <div v-if="project?.members?.length" class="member-list">
-          <span v-for="member in project.members" :key="member.id" class="member-chip">
-            <UserAvatar :avatar="userAvatarSrc(member)" :username="member.username" :size="22" />
-            {{ member.username }}
+          <v-chip
+            v-for="member in project.members"
+            :key="member.id"
+            size="small"
+            closable
+            @click:close="$emit('remove-member', member.id)"
+          >
+            <template #prepend>
+              <UserAvatar
+                :avatar="userAvatarSrc(resolveMember(member))"
+                :username="resolveMember(member).username"
+                :size="22"
+              />
+            </template>
+            {{ resolveMember(member).username }}
             <span class="member-role-badge">
               {{ member.role === 'viewer' ? 'просмотр' : 'редактор' }}
             </span>
-            <v-btn
-              icon="mdi-close"
-              size="x-small"
-              variant="text"
-              title="Удалить участника"
-              aria-label="Удалить участника"
-              @click="$emit('remove-member', member.id)"
-            />
-          </span>
+          </v-chip>
         </div>
 
         <v-divider />
@@ -223,6 +227,7 @@ const props = defineProps({
   saving: { type: Boolean, default: false },
   deleting: { type: Boolean, default: false },
   project: { type: Object, default: null },
+  users: { type: Array, default: () => [] },
   name: { type: String, default: '' },
   description: { type: String, default: '' },
   status: { type: String, default: 'active' },
@@ -266,6 +271,24 @@ const emit = defineEmits([
 ])
 
 const confirmDeleteOpen = ref(false)
+
+const resolveMember = (item) => {
+  const raw = item?.raw ?? item
+  const id = raw?.id ?? raw?.value ?? raw
+  const fromUsers = (props.users || []).find((user) => String(user.id) === String(id)) || {}
+  const fromMembers =
+    (props.project?.members || []).find((member) => String(member.id) === String(id)) || {}
+  const source = raw && typeof raw === 'object' ? raw : {}
+  return {
+    ...fromMembers,
+    ...fromUsers,
+    ...source,
+    id,
+    username: source.username || fromUsers.username || fromMembers.username || fromUsers.email || fromMembers.email,
+    email: source.email || fromUsers.email || fromMembers.email,
+    avatar: userAvatarSrc(source) || userAvatarSrc(fromUsers) || userAvatarSrc(fromMembers),
+  }
+}
 
 const showClearBackground = computed(() => {
   const file = Array.isArray(props.pendingBackground)
@@ -321,17 +344,25 @@ watch(
   gap: 4px;
 }
 
-.member-chip,
-.label-chip {
+.member-chip {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 2px 4px 2px 4px;
+  max-width: 100%;
+  padding: 2px 6px 2px 4px;
   border-radius: 999px;
   background: var(--accent5);
-  color: var(--banner-bg);
+  color: var(--app-heading);
   font-size: 12px;
   font-weight: 700;
+}
+
+.member-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 160px;
 }
 
 .member-selection {
@@ -342,6 +373,10 @@ watch(
 }
 
 .label-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 6px 2px 8px;
   border-radius: 6px;
   color: var(--white-change);
   text-shadow: 0 1px 2px rgba(3, 11, 58, 0.25);

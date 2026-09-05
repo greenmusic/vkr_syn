@@ -70,6 +70,8 @@ export const useBoardWorkspace = () => {
         ...prev,
         ...user,
         id,
+        username: user.username || prev.username,
+        email: user.email || prev.email,
         avatar: user.avatar || user.avatarData || prev.avatar || prev.avatarData || null,
       })
     }
@@ -158,6 +160,7 @@ export const useBoardWorkspace = () => {
     pendingBackground.value = null
     pendingRemoveBackground.value = false
     boardSettingsOpen.value = true
+    loadUserDirectory()
   }
 
   const applyBackground = async (boardId, file) => {

@@ -27,7 +27,8 @@ instance.interceptors.response.use(
     if (status === 401 && !isAuthEndpoint) {
       clearSession()
       if (window.location.pathname !== '/login') {
-        window.location.assign('/login')
+        if (router) router.replace({ name: 'login' })
+        else window.location.assign('/')
       }
     }
 

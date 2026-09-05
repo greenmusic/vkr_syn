@@ -31,6 +31,7 @@
           v-model:new-label-title="newLabelTitle"
           v-model:new-label-color="newLabelColor"
           :project="selectedProject"
+          :users="boardPeople"
           :project-status-options="projectStatusOptions"
           :visibility-options="visibilityOptions"
           :member-role-options="memberRoleOptions"
